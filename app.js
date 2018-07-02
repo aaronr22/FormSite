@@ -22,18 +22,31 @@ app.get("/", function (req, res) {
 
 app.set('port', (process.env.PORT || 5000));
 
+function updateSheet(rowId, val, workbook) {
+    var z = workbook.sheet(0).find(rowId);
+    //const util = require('util')
+    // console.log(util.inspect(z, false, null))
+    var c = "B" + z[0].rowNumber();
+    workbook.sheet("Sheet1").cell(c).value(val);
+
+}
+
 //sample get request code
 app.get("/data", function (req, res) {
     var query = url.parse(req.url, true).query;
     var formData = JSON.parse(query.formData);
     console.log(formData);
 
-    //TODO: excel stuff
     var path = 'template.xlsx';
+
     XlsxPopulate.fromFileAsync(path).then(workbook => {
         // Modify the workbook.
-        workbook.sheet("Sheet1").cell("B2").value(formData[0]['value']);
+        for (var i = 0; i < formData.length; i++) {
+            //TODO: skip if value is empty
+            updateSheet(formData[i]['name'], formData[i]['value'], workbook)
+        }
 
+        //TODO: Naming stuff
         // Write to file.
         return workbook.toFileAsync("./out.xlsx");
     });
