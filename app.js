@@ -22,11 +22,13 @@ app.get("/", function (req, res) {
 
 app.set('port', (process.env.PORT || 5000));
 
-function updateSheet(rowId, val, workbook) {
+function updateSheet(rowId, val, workbook, col) {
+    console.log(rowId);
     var z = workbook.sheet(0).find(rowId);
     //const util = require('util')
     // console.log(util.inspect(z, false, null))
-    var c = "B" + z[0].rowNumber();
+    var c = col + z[0].rowNumber();
+    console.log(c);
     workbook.sheet("Sheet1").cell(c).value(val);
 
 }
@@ -43,7 +45,13 @@ app.get("/data", function (req, res) {
         // Modify the workbook.
         for (var i = 0; i < formData.length; i++) {
             //TODO: skip if value is empty
-            updateSheet(formData[i]['name'], formData[i]['value'], workbook)
+            if (formData[i]['name'].includes('total')) {
+                var sub = formData[i]['name'].substring(6);
+                console.log('substring: ' + sub);
+                updateSheet(sub, formData[i]['value'], workbook, 'B');
+            } else {
+                updateSheet(formData[i]['name'], formData[i]['value'], workbook, 'C');
+            }
         }
 
         //TODO: Naming stuff
