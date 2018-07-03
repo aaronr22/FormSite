@@ -45,12 +45,16 @@ app.get("/data", function (req, res) {
         // Modify the workbook.
         for (var i = 0; i < formData.length; i++) {
             //TODO: skip if value is empty
-            if (formData[i]['name'].includes('total')) {
-                var sub = formData[i]['name'].substring(6);
+            if (formData[i]['name'].includes('total-')) {
+                var sub = formData[i]['name'].substring(7);
+                console.log('substring: ' + sub);
+                updateSheet(sub, formData[i]['value'], workbook, 'C');
+            } else if (formData[i]['name'].includes('serv-')) {
+                var sub = formData[i]['name'].substring(5);
                 console.log('substring: ' + sub);
                 updateSheet(sub, formData[i]['value'], workbook, 'B');
             } else {
-                updateSheet(formData[i]['name'], formData[i]['value'], workbook, 'C');
+                updateSheet(formData[i]['name'], formData[i]['value'], workbook, 'D');
             }
         }
 
