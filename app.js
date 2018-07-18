@@ -46,7 +46,7 @@ app.get("/data", function (req, res) {
         for (var i = 0; i < formData.length; i++) {
             //TODO: skip if value is empty
             if (formData[i]['name'].includes('total-')) {
-                var sub = formData[i]['name'].substring(7);
+                var sub = formData[i]['name'].substring(6);
                 console.log('substring: ' + sub);
                 updateSheet(sub, formData[i]['value'], workbook, 'C');
             } else if (formData[i]['name'].includes('serv-')) {
